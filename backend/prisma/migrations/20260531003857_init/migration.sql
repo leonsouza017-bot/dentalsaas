@@ -30,7 +30,7 @@ CREATE TABLE "Appointment"
 );
 
 
- AddForeignKey
+AddForeignKey
 ALTER TABLE "Appointment" ADD CONSTRAINT "Appointment_patientId_fkey" FOREIGN KEY ("patientId") REFERENCES "Patient"("id")
 ON DELETE RESTRICT ON
 UPDATE CASCADE;
