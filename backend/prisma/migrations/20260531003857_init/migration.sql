@@ -1,5 +1,6 @@
 -- CreateTable
-CREATE TABLE "Patient" (
+CREATE TABLE "Patient"
+(
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT,
@@ -13,7 +14,8 @@ CREATE TABLE "Patient" (
 );
 
 -- CreateTable
-CREATE TABLE "Appointment" (
+CREATE TABLE "Appointment"
+(
     "id" TEXT NOT NULL,
     "patientId" TEXT NOT NULL,
     "title" TEXT NOT NULL,
@@ -27,5 +29,8 @@ CREATE TABLE "Appointment" (
     CONSTRAINT "Appointment_pkey" PRIMARY KEY ("id")
 );
 
--- AddForeignKey
-ALTER TABLE "Appointment" ADD CONSTRAINT "Appointment_patientId_fkey" FOREIGN KEY ("patientId") REFERENCES "Patient"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+ AddForeignKey
+ALTER TABLE "Appointment" ADD CONSTRAINT "Appointment_patientId_fkey" FOREIGN KEY ("patientId") REFERENCES "Patient"("id")
+ON DELETE RESTRICT ON
+UPDATE CASCADE;
