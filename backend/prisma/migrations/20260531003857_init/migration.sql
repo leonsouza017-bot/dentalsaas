@@ -9,7 +9,6 @@ CREATE TABLE "Patient"
     "notes" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-
     CONSTRAINT "Patient_pkey" PRIMARY KEY ("id")
 );
 
@@ -25,12 +24,10 @@ CREATE TABLE "Appointment"
     "price" DECIMAL(10,2),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-
     CONSTRAINT "Appointment_pkey" PRIMARY KEY ("id")
 );
 
-
-AddForeignKey
+-- AddForeignKey
 ALTER TABLE "Appointment" ADD CONSTRAINT "Appointment_patientId_fkey" FOREIGN KEY ("patientId") REFERENCES "Patient"("id")
 ON DELETE RESTRICT ON
 UPDATE CASCADE;

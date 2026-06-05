@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3333';
+
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,7 +24,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:3333/auth/login', {
+      const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -36,8 +38,8 @@ export default function LoginPage() {
         return;
       }
 
-     localStorage.setItem('token', data.token);
-localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
 
       router.push('/dashboard');
     } catch {
@@ -96,7 +98,6 @@ localStorage.setItem('user', JSON.stringify(data.user));
             >
               {loading ? 'Entrando...' : 'Entrar'}
             </button>
-
           </form>
         </div>
 
