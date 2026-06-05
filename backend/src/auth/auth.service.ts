@@ -1,24 +1,15 @@
 import 'dotenv/config';
-import {
-  Injectable,
-  UnauthorizedException,
-  ConflictException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaClient } from '@prisma/client';
-import { PrismaPg } from '@prisma/adapter-pg';
 import * as bcrypt from 'bcrypt';
 
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL,
-});
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient();
 
 @Injectable()
 export class AuthService {
   constructor(private jwt: JwtService) {}
 
-  // Registro
   async register(name: string, email: string, password: string) {
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {
@@ -39,7 +30,6 @@ export class AuthService {
     };
   }
 
-  // Login
   async login(email: string, password: string) {
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
