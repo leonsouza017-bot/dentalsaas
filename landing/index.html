@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Denty – Sistema de gestão odontológica completo. Agenda, pacientes, financeiro e notificações automáticas. Experimente grátis por 14 dias." />
+  <title>Denty – Gestão Odontológica Inteligente</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #0a1628;
+      --navy2:   #0f2040;
+      --blue:    #1a56db;
+      --blue2:   #2563eb;
+      --cyan:    #06b6d4;
+      --gold:    #f59e0b;
+      --cream:   #faf9f7;
+      --white:   #ffffff;
+      --gray:    #6b7280;
+      --border:  rgba(255,255,255,0.08);
+      --accent:  #06b6d4; /* Integrando o cyan do modelo claro para realces */
+      --muted:   #6b7280;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--navy);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 5%;
+      background: rgba(10,22,40,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      display: flex; align-items: center; gap: 0.75rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; font-weight: 700;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .nav-logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      color: var(--white) !important;
+      padding: 0.625rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600 !important;
+      text-decoration: none;
+      transition: opacity 0.2s !important;
+    }
+
+    .nav-cta:hover { opacity: 0.9; }
+
+    /* ── HERO (Headline Agressiva do Modelo 1 + Visual do Modelo 2) ── */
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 50%, #0d1f3c 100%);
+      display: flex; align-items: center;
+      padding: 9rem 5% 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(26,86,219,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(6,182,212,0.1) 0%, transparent 50%);
+    }
+
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .hero-content {
+      position: relative; z-index: 1;
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(6,182,212,0.15);
+      border: 1px solid rgba(6,182,212,0.3);
+      color: var(--cyan);
+      padding: 0.375rem 1rem;
+      border-radius: 100px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.3rem, 4.5vw, 3.8rem);
+      font-weight: 900;
+      line-height: 1.05;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      background: linear-gradient(135deg, var(--cyan), var(--blue2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-desc {
+      font-size: 1.125rem;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .hero-ctas {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      color: var(--white);
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 32px rgba(26,86,219,0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(26,86,219,0.5);
+    }
+
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: transparent;
+      color: rgba(255,255,255,0.8);
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-weight: 500;
+      font-size: 1rem;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.4);
+    }
+
+    .hero-stats {
+      display: flex; gap: 2rem; margin-top: 3rem;
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+
+    .hero-stat strong {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem; font-weight: 700;
+      color: var(--white);
+    }
+
+    .hero-stat span {
+      font-size: 0.8125rem;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .hero-visual {
+      position: relative;
+      animation: fadeLeft 0.8s 0.3s ease both;
+    }
+
+    .mockup {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .mockup-bar {
+      background: rgba(255,255,255,0.05);
+      padding: 0.875rem 1.25rem;
+      display: flex; align-items: center; gap: 0.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .mockup-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .mockup-body { padding: 1.5rem; }
+
+    .mockup-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem; margin-bottom: 1.25rem;
+    }
+
+    .mockup-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+
+    .mockup-card-label {
+      font-size: 0.6875rem;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 0.375rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .mockup-card-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .mockup-card-value.green { color: #34d399; }
+    .mockup-card-value.cyan { color: var(--cyan); }
+
+    .mockup-table-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .mockup-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 600; color: white;
+      flex-shrink: 0;
+    }
+
+    .mockup-name { font-size: 0.8125rem; color: rgba(255,255,255,0.8); margin-left: 0.75rem; }
+    .mockup-badge { font-size: 0.6875rem; padding: 0.25rem 0.625rem; border-radius: 100px; font-weight: 500; }
+    .badge-green { background: rgba(52,211,153,0.15); color: #34d399; }
+    .badge-blue  { background: rgba(59,130,246,0.15); color: #60a5fa; }
+    .badge-gold  { background: rgba(245,158,11,0.15); color: #fbbf24; }
+
+    /* ── LOGOS ── */
+    .logos {
+      background: var(--white);
+      padding: 2.5rem 5%;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: center;
+    }
+
+    .logos p {
+      font-size: 0.8125rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+    }
+
+    .logos-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 3rem; flex-wrap: wrap;
+    }
+
+    .logo-item { font-family: 'Playfair Display', serif; font-size: 1.125rem; color: #9ca3af; font-weight: 700; }
+
+    /* ── SEÇÃO FEED DE LOGS (Do Modelo 1 com Estética do Modelo 2) ── */
+    .section { padding: 120px 7%; }
+    .section-header { text-align: center; max-width: 600px; margin: 0 auto 4rem; }
+    .section-eyebrow { font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--blue2); margin-bottom: 1rem; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; line-height: 1.2; color: var(--navy); margin-bottom: 1rem; }
+    .section-title em { font-style: italic; color: var(--blue2); }
+    .section-desc { font-size: 1rem; color: var(--gray); line-height: 1.75; }
+
+    .dashboard-feed {
+      background: var(--white);
+      border: 1px solid #e5e7eb;
+      border-radius: 24px;
+      padding: 30px;
+      max-width: 800px;
+      margin: auto;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.04);
+    }
+
+    .log { display: flex; justify-content: space-between; padding: 18px 0; border-bottom: 1px solid #f3f4f6; color: var(--navy); font-weight: 500; }
+    .log span:last-child { color: #34d399; font-weight: bold; }
+    .log:last-child { border-bottom: none; }
+
+    /* ── SEÇÃO PROBLEM ── */
+    .problem { text-align: center; background: #f3f4f6; }
+    .problem div { font-size: clamp(2rem, 5vw, 4rem); opacity: .15; margin: 15px 0; font-family: 'Playfair Display', serif; font-weight: 700; color: var(--navy); }
+
+    /* ── FEATURES GRID ── */
+    .features { padding: 6rem 5%; background: var(--cream); }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+    .feature-card { background: var(--white); border: 1px solid #e5e7eb; border-radius: 16px; padding: 2rem; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; }
+    .feature-card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.08); border-color: var(--blue2); }
+    .feature-icon { width: 52px; height: 52px; background: linear-gradient(135deg, rgba(26,86,219,0.1), rgba(6,182,212,0.1)); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem; }
+    .feature-title { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; color: var(--navy); margin-bottom: 0.75rem; }
+    .feature-desc { font-size: 0.9375rem; color: var(--gray); line-height: 1.7; }
+
+    /* ── CALCULADORA OTIMIZADA INTERATIVA ── */
+    .calc-box {
+      background: var(--white);
+      border: 1px solid #e5e7eb;
+      border-radius: 24px;
+      padding: 40px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.04);
+    }
+    .calc-group { margin-bottom: 20px; text-align: left; }
+    .calc-group label { display: block; font-size: 0.9rem; color: var(--gray); margin-bottom: 8px; font-weight: 600; }
+    input { width: 100%; padding: 16px; background: #f9fafb; border: 1px solid #e5e7eb; color: var(--navy); border-radius: 12px; font-size: 1rem; transition: border-color 0.2s; font-weight: 500; }
+    input:focus { outline: none; border-color: var(--blue2); background: #fff; }
+    .result { font-size: 3rem; color: var(--blue2); margin-top: 25px; font-weight: 700; text-align: center; font-family: 'Playfair Display', serif; }
+
+    /* ── COMPARATIVO BRUTAL ── */
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 900px; margin: auto; }
+    .box { padding: 30px; border-radius: 20px; background: var(--white); border: 1px solid #e5e7eb; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
+    .box h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; }
+    .box p { line-height: 2; font-size: 1rem; margin-top: 15px; color: var(--navy); }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials { padding: 6rem 5%; background: var(--cream); }
+    .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+    .testimonial-card { background: var(--white); border: 1px solid #e5e7eb; border-radius: 16px; padding: 2rem; }
+    .testimonial-stars { color: var(--gold); font-size: 1rem; margin-bottom: 1rem; letter-spacing: 0.1em; }
+    .testimonial-text { font-family: 'Playfair Display', serif; font-size: 1.0625rem; font-style: italic; line-height: 1.75; color: var(--navy); margin-bottom: 1.5rem; }
+    .testimonial-author { display: flex; align-items: center; gap: 0.875rem; }
+    .testimonial-avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--cyan)); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size: 0.875rem; }
+    .testimonial-name { font-weight: 600; color: var(--navy); font-size: 0.9375rem; }
+    .testimonial-role { font-size: 0.8125rem; color: var(--gray); }
+
+    /* ── PRICING ── */
+    .pricing { padding: 6rem 5%; background: var(--white); }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1000px; margin: 0 auto; }
+    .pricing-card { border: 2px solid #e5e7eb; border-radius: 20px; padding: 2.5rem 2rem; position: relative; transition: transform 0.2s, border-color 0.2s; background: var(--cream); }
+    .pricing-card:hover { transform: translateY(-4px); }
+    .pricing-card.featured { border-color: var(--blue2); background: var(--navy); }
+    .pricing-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--blue), var(--cyan)); color: white; padding: 0.375rem 1.25rem; border-radius: 100px; font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
+    .pricing-plan { font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue2); margin-bottom: 1rem; }
+    .pricing-card.featured .pricing-plan { color: var(--cyan); }
+    .pricing-price { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; color: var(--navy); line-height: 1; margin-bottom: 0.375rem; }
+    .pricing-card.featured .pricing-price { color: var(--white); }
+    .pricing-period { font-size: 0.875rem; color: var(--gray); margin-bottom: 1.75rem; }
+    .pricing-card.featured .pricing-period { color: rgba(255,255,255,0.5); }
+    .pricing-features { list-style: none; margin-bottom: 2rem; }
+    .pricing-features li { display: flex; align-items: center; gap: 0.75rem; font-size: 0.9375rem; color: var(--navy); padding: 0.5rem 0; border-bottom: 1px solid #e5e7eb; }
+    .pricing-card.featured .pricing-features li { color: rgba(255,255,255,0.8); border-color: rgba(255,255,255,0.08); }
+    .pricing-features li::before { content: '✓'; width: 20px; height: 20px; background: linear-gradient(135deg, var(--blue), var(--cyan)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6875rem; color: white; font-weight: 700; flex-shrink: 0; }
+    .btn-pricing { display: block; text-align: center; padding: 0.875rem; border-radius: 12px; font-weight: 600; font-size: 0.9375rem; text-decoration: none; transition: all 0.2s; }
+    .btn-pricing-outline { border: 2px solid var(--blue2); color: var(--blue2); }
+    .btn-pricing-outline:hover { background: var(--blue2); color: white; }
+    .btn-pricing-solid { background: linear-gradient(135deg, var(--blue), var(--cyan)); color: white; box-shadow: 0 8px 24px rgba(26,86,219,0.4); }
+    .btn-pricing-solid:hover { transform: translateY(-1px); box-shadow: 0 12px 32px rgba(26,86,219,0.5); }
+
+    /* ── FAQ (REPARADO E ULTRA CORRIGIDO) ── */
+    .faq { padding: 6rem 5%; background: var(--cream); max-width: 800px; margin: 0 auto; }
+    .faq-item { border-bottom: 1px solid #e5e7eb; padding: 1.5rem 0; cursor: pointer; }
+    .faq-question { display: flex; align-items: center; justify-content: space-between; font-weight: 600; font-size: 1rem; color: var(--navy); }
+    .faq-icon { width: 28px; height: 28px; background: var(--blue2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem; flex-shrink: 0; transition: transform 0.3s; }
+    
+    /* Reparo do Bug do FAQ */
+    .faq-answer { font-size: 0.9375rem; color: var(--gray); line-height: 1.75; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s; }
+    .faq-item.open .faq-answer { max-height: 200px; padding-top: 1rem; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); background: var(--cyan); }
+
+    /* ── CTA FINAL ── */
+    .cta { padding: 6rem 5%; background: linear-gradient(135deg, var(--navy), var(--navy2)); text-align: center; position: relative; overflow: hidden; }
+    .cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 50%, rgba(6,182,212,0.1) 0%, transparent 70%); }
+    .cta-content { position: relative; z-index: 1; }
+    .cta-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 900; color: var(--white); margin-bottom: 1rem; }
+    .cta-title em { font-style: italic; background: linear-gradient(135deg, var(--cyan), var(--blue2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .cta-desc { font-size: 1.125rem; color: rgba(255,255,255,0.6); margin-bottom: 2.5rem; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .cta-whatsapp { display: inline-flex; align-items: center; gap: 0.75rem; background: #25d366; color: white; padding: 1.125rem 2.5rem; border-radius: 14px; font-size: 1.0625rem; font-weight: 700; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 8px 32px rgba(37,211,102,0.4); }
+    .cta-whatsapp:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(37,211,102,0.5); }
+    .cta-note { margin-top: 1.5rem; font-size: 0.875rem; color: rgba(255,255,255,0.35); }
+
+    /* ── FOOTER ── */
+    footer { background: #060e1c; padding: 2.5rem 5%; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); }
+    .footer-logo { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; color: var(--white); margin-bottom: 0.5rem; }
+    footer p { font-size: 0.8125rem; color: rgba(255,255,255,0.3); }
+
+    /* ── ANIMATIONS & RESPONSIVE ── */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeLeft { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+
+    @media (max-width: 1024px) {
+      .hero-content { grid-template-columns: 1fr; }
+      .hero-visual { display: none; }
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .testimonials-grid { grid-template-columns: 1fr; max-width: 500px; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+      .compare { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 5%; }
+      .nav-links { display: none; }
+      .features-grid { grid-template-columns: 1fr; }
+      .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
+    }
+
+    /* WhatsApp float */
+    .wa-float { position: fixed; bottom: 2rem; right: 2rem; z-index: 999; width: 56px; height: 56px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(37,211,102,0.4); text-decoration: none; transition: transform 0.2s; }
+    .wa-float:hover { transform: scale(1.1); }
+    .wa-float svg { width: 28px; height: 28px; }
+    .wa-pulse { position: absolute; inset: -4px; border-radius: 50%; background: #25d366; opacity: 0.4; animation: pulse 2s ease-out infinite; }
+    @keyframes pulse { 0% { transform: scale(1); opacity: 0.4; } 100% { transform: scale(1.8); opacity: 0; } }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">🦷</div>
+      Denty
+    </a>
+    <ul class="nav-links">
+      <li><a href="#funcionalidades">Funcionalidades</a></li>
+      <li><a href="#perda">Prejuízo</a></li>
+      <li><a href="#precos">Preços</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="https://wa.me/5534997091327?text=Quero+conhecer+o+Denty" target="_blank" class="nav-cta">Falar com especialista</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO (A Headline matadora do modelo 1 rodando no visual premium do modelo 2) -->
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div>
+        <div class="hero-badge">✦ Gestão odontológica inteligente</div>
+        <h1 class="hero-title">
+          Sua clínica funciona 8 horas.<br />
+          <em>O Denty trabalha 24.</em>
+        </h1>
+        <p class="hero-desc">
+          Agenda, pacientes, financeiro e automações no WhatsApp em uma plataforma premium única. Menos operação manual, mais crescimento para seu consultório.
+        </p>
+        <div class="hero-ctas">
+          <a href="https://wa.me/5534997091327?text=Quero+testar+o+Denty+gratis" target="_blank" class="btn-primary">
+            Testar grátis por 14 dias →
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <strong>+500</strong>
+            <span>Clínicas ativas</span>
+          </div>
+          <div class="hero-stat">
+            <strong>40%</strong>
+            <span>Menos faltas</span>
+          </div>
+          <div class="hero-stat">
+            <strong>3h</strong>
+            <span>Economizadas/semana</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Mockup -->
+      <div class="hero-visual">
+        <div class="mockup">
+          <div class="mockup-bar">
+            <div class="mockup-dot" style="background:#ff5f57"></div>
+            <div class="mockup-dot" style="background:#febc2e"></div>
+            <div class="mockup-dot" style="background:#28c840"></div>
+          </div>
+          <div class="mockup-body">
+            <div class="mockup-grid">
+              <div class="mockup-card">
+                <div class="mockup-card-label">Pacientes</div>
+                <div class="mockup-card-value cyan">248</div>
+              </div>
+              <div class="mockup-card">
+                <div class="mockup-card-label">Hoje</div>
+                <div class="mockup-card-value">7</div>
+              </div>
+              <div class="mockup-card">
+                <div class="mockup-card-label">Receita</div>
+                <div class="mockup-card-value green">R$12k</div>
+              </div>
+            </div>
+            <div>
+              <div class="mockup-table-row">
+                <div style="display:flex;align-items:center">
+                  <div class="mockup-avatar">MS</div>
+                  <div class="mockup-name">Maria Silva</div>
+                </div>
+                <span class="mockup-badge badge-green">Confirmado</span>
+              </div>
+              <div class="mockup-table-row">
+                <div style="display:flex;align-items:center">
+                  <div class="mockup-avatar">JP</div>
+                  <div class="mockup-name">João Pereira</div>
+                </div>
+                <span class="mockup-badge badge-blue">Agendado</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGOS -->
+  <div class="logos">
+    <p>Confiado por dentistas em todo o Brasil</p>
+    <div class="logos-row">
+      <div class="logo-item">Clínica Sorrir</div>
+      <div class="logo-item">OdontoMax</div>
+      <div class="logo-item">Dental Prime</div>
+      <div class="logo-item">Sorriso Perfeito</div>
+      <div class="logo-item">OralCare</div>
+    </div>
+  </div>
+
+  <!-- DINÂMICA DE LOGS (Do modelo 1 - Prova visual instantânea de valor) -->
+  <section class="section">
+    <div class="section-header">
+      <p class="section-eyebrow">Automação Real</p>
+      <h2 class="section-title">Enquanto você atende, o Denty <em>administra</em>.</h2>
+      <p class="section-desc">Acompanhe as ações que acontecem de forma 100% autônoma no sistema.</p>
+    </div>
+    <div class="dashboard-feed">
+      <div class="log"><span>09:03 — Maria confirmou consulta via link</span><span>✓</span></div>
+      <div class="log"><span>09:07 — Pagamento PIX recebido R$350</span><span>✓</span></div>
+      <div class="log"><span>09:11 — Lembrete automático de retorno enviado</span><span>✓</span></div>
+      <div class="log"><span>09:16 — Próxima vaga preenchida na agenda</span><span>✓</span></div>
+    </div>
+  </section>
+
+  <!-- PROBLEM (Do modelo 1) -->
+  <section class="section problem">
+    <div>Planilhas Confusas.</div>
+    <div>Pacientes Esquecidos.</div>
+    <div>Agenda Manual Rasurada.</div>
+    <div>Faltas sem Aviso.</div>
+    <div>Dinheiro Perdido.</div>
+    <h2 class="section-title" style="margin-top:20px; color:var(--navy)">Chega de passar por isso.</h2>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="funcionalidades">
+    <div class="section-header">
+      <p class="section-eyebrow">Funcionalidades</p>
+      <h2 class="section-title">Tudo que sua clínica <em>precisa</em></h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📅</div>
+        <h3 class="feature-title">Agenda Inteligente</h3>
+        <p class="feature-desc">Calendário automatizado sem conflitos de horários.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👥</div>
+        <h3 class="feature-title">Gestão de Pacientes</h3>
+        <p class="feature-desc">Histórico completo e prontuários centralizados na nuvem.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💰</div>
+        <h3 class="feature-title">Controle Financeiro</h3>
+        <p class="feature-desc">Fluxo de caixa em tempo real com relatórios rápidos.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALCULADORA INTERATIVA EVOLUÍDA -->
+  <section class="section" id="perda">
+    <div class="section-header">
+      <p class="section-eyebrow">Simulador de Perdas</p>
+      <h2 class="section-title">Quanto sua clínica <em>deixa na mesa?</em></h2>
+      <p class="section-desc">Insira seus dados abaixo e veja o impacto financeiro das faltas não gerenciadas.</p>
+    </div>
+    <div class="calc-box">
+      <div class="calc-group">
+          <label for="faltas">Média de pacientes que faltam por mês</label>
+          <input id="faltas" type="number" value="8">
+      </div>
+      <div class="calc-group">
+          <label for="valor">Valor médio da sua consulta (R$)</label>
+          <input id="valor" type="number" value="600">
+      </div>
+      <div class="result" id="resultado">R$ 4.800/mês</div>
+    </div>
+  </section>
+
+  <!-- COMPARATIVO BRUTAL -->
+  <section class="section">
+    <div class="compare">
+      <div class="box">
+        <h3 style="color:var(--gray)">❌ Clínica comum</h3>
+        <p>• Agenda manual vulnerável a erros<br>• Faltas constantes sem aviso<br>• Financeiro desorganizado<br>• Sem dados para crescer</p>
+      </div>
+      <div class="box" style="border-color: var(--blue2);">
+        <h3 style="color:var(--blue2)">✔ Clínica Denty</h3>
+        <p>• Agenda inteligente integrada<br>• Lembretes automáticos no WhatsApp<br>• Financeiro centralizado e limpo<br>• Previsibilidade de faturamento</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials">
+    <div class="section-header">
+      <p class="section-eyebrow">Depoimentos</p>
+      <h2 class="section-title">O que dizem os <em>dentistas</em></h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Depois do Denty, minhas faltas caíram 60%. Os lembretes automáticos pelo WhatsApp fizeram toda a diferença na minha agenda."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">DR</div>
+          <div>
+            <div class="testimonial-name">Dra. Renata Oliveira</div>
+            <div class="testimonial-role">Clínica Geral · São Paulo</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Sistema incrível! Consigo acompanhar o financeiro da clínica em tempo real. Antes usava planilha, agora não largo mais."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">FM</div>
+          <div>
+            <div class="testimonial-name">Dr. Felipe Martins</div>
+            <div class="testimonial-role">Ortodontista · Belo Horizonte</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Muito fácil de usar. Comecei a utilizar no mesmo dia que entrei em contato. Recomendo para qualquer consultório."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">CS</div>
+          <div>
+            <div class="testimonial-name">Dra. Camila Santos</div>
+            <div class="testimonial-role">Endodontista · Rio de Janeiro</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing" id="precos">
+    <div class="section-header">
+      <p class="section-eyebrow">Planos</p>
+      <h2 class="section-title">Investimento que se <em>paga</em></h2>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-plan">Básico</div>
+        <div class="pricing-price">R$ 97</div>
+        <div class="pricing-period">/mês</div>
+        <ul class="pricing-features">
+          <li>Até 100 pacientes</li>
+          <li>Agenda completa</li>
+          <li>Controle financeiro</li>
+        </ul>
+        <a href="https://wa.me/5534997091327?text=Quero+o+plano+Basico" target="_blank" class="btn-pricing btn-pricing-outline">Começar agora</a>
+      </div>
+
+      <div class="pricing-card featured">
+        <div class="pricing-badge">⭐ Mais popular</div>
+        <div class="pricing-plan">Pro</div>
+        <div class="pricing-price">R$ 197</div>
+        <div class="pricing-period">/mês</div>
+        <ul class="pricing-features">
+          <li>Pacientes ilimitados</li>
+          <li>Agenda + WhatsApp Automático</li>
+          <li>Financeiro + Relatórios</li>
+        </ul>
+        <a href="https://wa.me/5534997091327?text=Quero+o+plano+Pro" target="_blank" class="btn-pricing btn-pricing-solid">Começar agora</a>
+      </div>
+
+      <div class="pricing-card">
+        <div class="pricing-plan">Premium</div>
+        <div class="pricing-price">R$ 297</div>
+        <div class="pricing-period">/mês</div>
+        <ul class="pricing-features">
+          <li>Tudo do Pro</li>
+          <li>Múltiplos usuários</li>
+          <li>Prontuário digital completo</li>
+        </ul>
+        <a href="https://wa.me/5534997091327?text=Quero+o+plano+Premium" target="_blank" class="btn-pricing btn-pricing-outline">Começar agora</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq">
+    <div class="section-header">
+      <p class="section-eyebrow">Dúvidas</p>
+      <h2 class="section-title">Perguntas <em>frequentes</em></h2>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        Preciso instalar algum programa?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-answer">Não! O Denty funciona 100% pelo navegador de forma segura. Funciona no computador, tablet e celular.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        Como funciona o período de teste grátis?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-answer">Você tem 14 dias para testar todas as funcionalidades sem nenhum custo e sem precisar cadastrar cartão de crédito.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        Meus dados ficam seguros?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-answer">Sim! Todos os dados são armazenados com criptografia bancária em servidores em nuvem seguros, em total conformidade com a LGPD.</div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="cta-content">
+      <h2 class="cta-title">Pronto para transformar<br /><em>sua clínica?</em></h2>
+      <p class="cta-desc">Comece hoje mesmo. 14 dias grátis, sem cartão de crédito.</p>
+      <a href="https://wa.me/5534997091327?text=Quero+testar+o+Denty+gratuitamente" target="_blank" class="cta-whatsapp">
+        Falar pelo WhatsApp agora
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">🦷 Denty</div>
+    <p>© 2026 Denty. Todos os direitos reservados.</p>
+  </footer>
+
+  <!-- WhatsApp Float Button -->
+  <a href="https://wa.me/5534997091327?text=Quero+conhecer+o+Denty" target="_blank" class="wa-float">
+    <div class="wa-pulse"></div>
+    <svg viewBox="0 0 24 24" fill="white" width="28" height="28">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+    </svg>
+  </a>
+
+  <script>
+    // Correção Completa do FAQ dinâmico
+    function toggleFaq(el) {
+      const item = el.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    }
+
+    // Calculadora dinâmica herdada e otimizada
+    function calc(){
+      let f = +document.getElementById('faltas').value || 0;
+      let v = +document.getElementById('valor').value || 0;
+      let perda = f * v;
+      document.getElementById('resultado').innerText = 'R$ ' + perda.toLocaleString('pt-BR') + '/mês';
+    }
+    document.querySelectorAll('input').forEach(i => i.oninput = calc);
+    calc();
+
+    // Animações suaves de scroll (Intersection Observer)
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.feature-card, .testimonial-card, .pricing-card, .dashboard-feed, .calc-box, .box').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>
