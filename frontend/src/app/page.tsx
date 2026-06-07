@@ -38,8 +38,9 @@ export default function LoginPage() {
         return;
       }
 
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+     localStorage.setItem('token', data.token);
+localStorage.setItem('user', JSON.stringify(data.user));
+localStorage.setItem('clinic', JSON.stringify(data.clinic));
 
       router.push('/dashboard');
     } catch {
