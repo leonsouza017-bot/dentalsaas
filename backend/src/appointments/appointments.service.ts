@@ -1,11 +1,14 @@
 import 'dotenv/config';
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { NotificationsService } from '../notifications/notifications.service';
 
 const prisma = new PrismaClient();
 
 @Injectable()
 export class AppointmentsService {
+  constructor(private notifications: NotificationsService) {}
+
   async findAll() {
     return prisma.appointment.findMany({
       include: { patient: true },
@@ -27,7 +30,7 @@ export class AppointmentsService {
     endAt: string;
     price?: number;
   }) {
-    return prisma.appointment.create({
+    const appointment = await prisma.appointment.create({
       data: {
         title: data.title,
         patientId: data.patientId,
@@ -37,16 +40,27 @@ export class AppointmentsService {
       },
       include: { patient: true },
     });
+
+    // Envia confirmação automática pelo WhatsApp
+    if (appointment.patient.phone) {
+      const date = new Date(data.startAt).toLocaleDateString('pt-BR');
+      const time = new Date(data.startAt).toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+
+      await this.notifications.sendAppointmentConfirmation(
+        appointment.patient.name,
+        appointment.patient.phone,
+        date,
+        time,
+      );
+    }
+
+    return appointment;
   }
 
-  async update(
-    id: string,
-    data: {
-      title?: string;
-      status?: string;
-      price?: number;
-    },
-  ) {
+  async update(id: string, data: { title?: string; status?: string; price?: number }) {
     return prisma.appointment.update({
       where: { id },
       data,
