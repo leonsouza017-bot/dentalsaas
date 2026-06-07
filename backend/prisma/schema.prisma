@@ -7,17 +7,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model Clinic {
   id        String   @id @default(cuid())
   name      String
   email     String   @unique
-  password  String
+  phone     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  users        User[]
+  patients     Patient[]
+  appointments Appointment[]
+  transactions Transaction[]
+}
+
+model User {
+  id        String   @id @default(cuid())
+  clinicId  String
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("ADMIN")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  clinic    Clinic   @relation(fields: [clinicId], references: [id])
 }
 
 model Patient {
   id        String    @id @default(cuid())
+  clinicId  String
   name      String
   email     String?
   phone     String
@@ -26,12 +45,14 @@ model Patient {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
+  clinic       Clinic        @relation(fields: [clinicId], references: [id])
   appointments Appointment[]
   transactions Transaction[]
 }
 
 model Appointment {
   id        String   @id @default(cuid())
+  clinicId  String
   patientId String
   title     String
   startAt   DateTime
@@ -41,11 +62,13 @@ model Appointment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  clinic    Clinic   @relation(fields: [clinicId], references: [id])
   patient   Patient  @relation(fields: [patientId], references: [id])
 }
 
 model Transaction {
   id          String   @id @default(cuid())
+  clinicId    String
   patientId   String?
   description String
   amount      Decimal  @db.Decimal(10, 2)
@@ -56,5 +79,6 @@ model Transaction {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  clinic      Clinic   @relation(fields: [clinicId], references: [id])
   patient     Patient? @relation(fields: [patientId], references: [id])
 }

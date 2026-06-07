@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3333';
+import { apiFetch } from '@/lib/api';
 
 interface Patient {
   id: string;
@@ -16,13 +15,10 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${API_URL}/patients`)
-      .then((res) => res.json())
-      .then((data) => {
-        setPatients(Array.isArray(data) ? data : []);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
+    apiFetch('/patients').then((data) => {
+      setPatients(Array.isArray(data) ? data : []);
+      setLoading(false);
+    });
   }, []);
 
   return (
@@ -40,13 +36,11 @@ export default function DashboardPage() {
           </p>
           <p className="text-xs text-green-600 mt-2">↑ Atualizado agora</p>
         </div>
-
         <div className="bg-white rounded-lg border border-slate-200 p-6">
           <p className="text-sm text-slate-500 mb-1">Consultas Hoje</p>
           <p className="text-3xl font-bold text-slate-800">0</p>
           <p className="text-xs text-slate-400 mt-2">Nenhuma consulta hoje</p>
         </div>
-
         <div className="bg-white rounded-lg border border-slate-200 p-6">
           <p className="text-sm text-slate-500 mb-1">Receita do Mês</p>
           <p className="text-3xl font-bold text-slate-800">R$ 0</p>

@@ -6,13 +6,14 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class FinancialService {
-  async findAll() {
+  async findAll(clinicId: string) {
     return prisma.transaction.findMany({
+      where: { clinicId },
       orderBy: { dueDate: 'desc' },
     });
   }
 
-  async create(data: {
+  async create(clinicId: string, data: {
     description: string;
     amount: number;
     type: string;
@@ -21,16 +22,17 @@ export class FinancialService {
   }) {
     return prisma.transaction.create({
       data: {
+        clinicId,
         description: data.description,
         amount: data.amount,
-        type: data.type as any,
+        type: data.type,
         category: data.category,
         dueDate: new Date(data.dueDate),
       },
     });
   }
 
-  async remove(id: string) {
+  async remove(id: string, clinicId: string) {
     return prisma.transaction.delete({ where: { id } });
   }
 }

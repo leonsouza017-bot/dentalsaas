@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3333';
+import { apiFetch } from '@/lib/api';
 
 interface Transaction {
   id: string;
@@ -27,19 +26,17 @@ export default function FinancialPage() {
   const [category, setCategory] = useState('');
   const [dueDate, setDueDate] = useState('');
 
-  const fetchTransactions = () => {
-    fetch(`${API_URL}/financial`)
-      .then((res) => res.json())
-      .then((data) => {
-        setTransactions(Array.isArray(data) ? data : []);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  };
-
   useEffect(() => {
-    fetchTransactions();
+    apiFetch('/financial').then((data) => {
+      setTransactions(Array.isArray(data) ? data : []);
+      setLoading(false);
+    });
   }, []);
+
+  const fetchTransactions = async () => {
+    const data = await apiFetch('/financial');
+    setTransactions(Array.isArray(data) ? data : []);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,9 +48,8 @@ export default function FinancialPage() {
     }
 
     setSaving(true);
-    await fetch(`${API_URL}/financial`, {
+    await apiFetch('/financial', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         description,
         amount: parseFloat(amount),
@@ -126,7 +122,7 @@ export default function FinancialPage() {
                 placeholder="Ex: Consulta João Silva"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
@@ -136,7 +132,7 @@ export default function FinancialPage() {
                 placeholder="Ex: 150.00"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
@@ -144,7 +140,7 @@ export default function FinancialPage() {
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value as 'INCOME' | 'EXPENSE')}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="INCOME">Receita</option>
                 <option value="EXPENSE">Despesa</option>
@@ -157,7 +153,7 @@ export default function FinancialPage() {
                 placeholder="Ex: Consulta, Aluguel..."
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
@@ -166,7 +162,7 @@ export default function FinancialPage() {
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 

@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3333';
+import { apiFetch } from '@/lib/api';
 
 interface Patient {
   id: string;
@@ -33,21 +32,18 @@ export default function AppointmentsPage() {
   const [endAt, setEndAt] = useState('');
   const [price, setPrice] = useState('');
 
-  const fetchAppointments = () => {
-    fetch(`${API_URL}/appointments`)
-      .then((res) => res.json())
-      .then((data) => {
-        setAppointments(Array.isArray(data) ? data : []);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
+  const fetchAppointments = async () => {
+    const data = await apiFetch('/appointments');
+    setAppointments(Array.isArray(data) ? data : []);
+    setLoading(false);
   };
 
   useEffect(() => {
-    fetch(`${API_URL}/patients`)
-      .then((res) => res.json())
-      .then((data) => setPatients(Array.isArray(data) ? data : []));
-    fetchAppointments();
+    apiFetch('/patients').then((data) => setPatients(Array.isArray(data) ? data : []));
+    apiFetch('/appointments').then((data) => {
+      setAppointments(Array.isArray(data) ? data : []);
+      setLoading(false);
+    });
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,9 +56,8 @@ export default function AppointmentsPage() {
     }
 
     setSaving(true);
-    await fetch(`${API_URL}/appointments`, {
+    await apiFetch('/appointments', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         title,
         patientId,
@@ -122,7 +117,7 @@ export default function AppointmentsPage() {
                 placeholder="Ex: Limpeza, Extração..."
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
@@ -130,7 +125,7 @@ export default function AppointmentsPage() {
               <select
                 value={patientId}
                 onChange={(e) => setPatientId(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">Selecione um paciente</option>
                 {patients.map((p) => (
@@ -144,7 +139,7 @@ export default function AppointmentsPage() {
                 type="datetime-local"
                 value={startAt}
                 onChange={(e) => setStartAt(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
@@ -153,7 +148,7 @@ export default function AppointmentsPage() {
                 type="datetime-local"
                 value={endAt}
                 onChange={(e) => setEndAt(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
@@ -163,7 +158,7 @@ export default function AppointmentsPage() {
                 placeholder="Ex: 150.00"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 

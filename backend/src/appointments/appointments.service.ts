@@ -9,21 +9,22 @@ const prisma = new PrismaClient();
 export class AppointmentsService {
   constructor(private notifications: NotificationsService) {}
 
-  async findAll() {
+  async findAll(clinicId: string) {
     return prisma.appointment.findMany({
+      where: { clinicId },
       include: { patient: true },
       orderBy: { startAt: 'asc' },
     });
   }
 
-  async findOne(id: string) {
-    return prisma.appointment.findUnique({
-      where: { id },
+  async findOne(id: string, clinicId: string) {
+    return prisma.appointment.findFirst({
+      where: { id, clinicId },
       include: { patient: true },
     });
   }
 
-  async create(data: {
+  async create(clinicId: string, data: {
     title: string;
     patientId: string;
     startAt: string;
@@ -32,6 +33,7 @@ export class AppointmentsService {
   }) {
     const appointment = await prisma.appointment.create({
       data: {
+        clinicId,
         title: data.title,
         patientId: data.patientId,
         startAt: new Date(data.startAt),
@@ -41,7 +43,6 @@ export class AppointmentsService {
       include: { patient: true },
     });
 
-    // Envia confirmação automática pelo WhatsApp
     if (appointment.patient.phone) {
       const date = new Date(data.startAt).toLocaleDateString('pt-BR');
       const time = new Date(data.startAt).toLocaleTimeString('pt-BR', {
@@ -60,7 +61,7 @@ export class AppointmentsService {
     return appointment;
   }
 
-  async update(id: string, data: { title?: string; status?: string; price?: number }) {
+  async update(id: string, clinicId: string, data: { title?: string; status?: string; price?: number }) {
     return prisma.appointment.update({
       where: { id },
       data,
@@ -68,7 +69,7 @@ export class AppointmentsService {
     });
   }
 
-  async remove(id: string) {
+  async remove(id: string, clinicId: string) {
     return prisma.appointment.delete({ where: { id } });
   }
 }

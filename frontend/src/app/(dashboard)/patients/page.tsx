@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3333';
+import { apiFetch } from '@/lib/api';
 
 interface Patient {
   id: string;
@@ -22,21 +21,18 @@ export default function PatientsPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetch(`${API_URL}/patients`)
-      .then((res) => res.json())
-      .then((data) => {
-        setPatients(Array.isArray(data) ? data : []);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
-
-  const fetchPatients = () => {
-    fetch(`${API_URL}/patients`)
-      .then((res) => res.json())
-      .then((data) => setPatients(Array.isArray(data) ? data : []));
+  const fetchPatients = async () => {
+    const data = await apiFetch('/patients');
+    setPatients(Array.isArray(data) ? data : []);
+    setLoading(false);
   };
+
+  useEffect(() => {
+  apiFetch('/patients').then((data) => {
+    setPatients(Array.isArray(data) ? data : []);
+    setLoading(false);
+  });
+}, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,9 +44,8 @@ export default function PatientsPage() {
     }
 
     setSaving(true);
-    await fetch(`${API_URL}/patients`, {
+    await apiFetch('/patients', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, phone, email }),
     });
 
@@ -64,7 +59,7 @@ export default function PatientsPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Tem certeza que deseja excluir este paciente?')) return;
-    await fetch(`${API_URL}/patients/${id}`, { method: 'DELETE' });
+    await apiFetch(`/patients/${id}`, { method: 'DELETE' });
     fetchPatients();
   };
 
@@ -94,7 +89,7 @@ export default function PatientsPage() {
                 placeholder="Ex: João Silva"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
@@ -104,7 +99,7 @@ export default function PatientsPage() {
                 placeholder="Ex: 11999999999"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
@@ -114,7 +109,7 @@ export default function PatientsPage() {
                 placeholder="Ex: joao@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
