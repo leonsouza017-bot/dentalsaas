@@ -13,6 +13,7 @@ interface Patient {
 export default function DashboardPage() {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [loading, setLoading] = useState(true);
+  const [subscribing, setSubscribing] = useState(false);
 
   useEffect(() => {
     apiFetch('/patients').then((data) => {
@@ -21,8 +22,37 @@ export default function DashboardPage() {
     });
   }, []);
 
+  const handleSubscribe = async () => {
+    setSubscribing(true);
+    try {
+      const data = await apiFetch('/payments/checkout', { method: 'POST' });
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch {
+      alert('Erro ao iniciar pagamento. Tente novamente.');
+    }
+    setSubscribing(false);
+  };
+
   return (
     <div className="p-6">
+
+      {/* Banner de assinatura */}
+      <div className="bg-gradient-to-r from-blue-600 to-cyan-500 rounded-xl p-6 mb-8 flex items-center justify-between">
+        <div>
+          <p className="text-white font-bold text-lg">🦷 Denty Pro — R$ 197/mês</p>
+          <p className="text-blue-100 text-sm mt-1">Pacientes ilimitados · WhatsApp automático · Suporte prioritário</p>
+        </div>
+        <button
+          onClick={handleSubscribe}
+          disabled={subscribing}
+          className="bg-white text-blue-600 px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-blue-50 transition-colors disabled:opacity-50 flex-shrink-0"
+        >
+          {subscribing ? 'Aguarde...' : 'Assinar agora →'}
+        </button>
+      </div>
+
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-slate-800">Dashboard</h2>
         <p className="text-slate-500 text-sm mt-1">Resumo da sua clínica</p>
